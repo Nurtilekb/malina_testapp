@@ -151,7 +151,7 @@ class ShoppingPage extends StatelessWidget {
                                           '${item.product.price} ₽',
                                           style: const TextStyle(
                                             fontSize: 14,
-                                            color: AppColors.primarydarkcolor,
+                                            color: AppColors.backround1,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -229,7 +229,7 @@ class ShoppingPage extends StatelessWidget {
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.primarydarkcolor,
+                                          color: AppColors.backround1,
                                         ),
                                       ),
                                     ],
@@ -263,6 +263,7 @@ class ShoppingPage extends StatelessWidget {
                                 const Text(
                                   'Итого:',
                                   style: TextStyle(
+                                    color: AppColors.textcolor2,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -310,6 +311,7 @@ class ShoppingPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            // Totalcheck(subtotal: cartService.totalPrice),
                           ],
                         ),
                       ),
@@ -318,6 +320,115 @@ class ShoppingPage extends StatelessWidget {
                 ),
         );
       },
+    );
+  }
+}
+
+class Totalcheck extends StatelessWidget {
+  final double subtotal;
+  final VoidCallback? onCheckout;
+
+  const Totalcheck({super.key, required this.subtotal, this.onCheckout});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.grey[50]!, Colors.grey[100]!],
+        ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Индикатор
+          Container(
+            width: 50,
+            height: 5,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Итоговая сумма
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Итого',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${subtotal.toStringAsFixed(2)} ₽',
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'включая НДС',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // Кнопка
+          SizedBox(
+            width: double.infinity,
+            height: 55,
+            child: ElevatedButton(
+              onPressed: onCheckout,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.shopping_bag_outlined),
+                  SizedBox(width: 12),
+                  Text(
+                    'Перейти к оформлению',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
