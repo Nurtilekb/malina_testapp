@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:malina/themes/themData.dart' show AppColors;
-import 'package:malina/widgets/profile_descrip.dart';
+import 'package:malina/widgets/logOut_widget.dart';
+import 'package:malina/widgets/prof_carts.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -16,74 +17,56 @@ class ProfilePage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: AppColors.backround1,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.backround1,
+              AppColors.backround1.withOpacity(0.95),
+            ],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
           children: [
-            Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const CircleAvatar(
-                    child: Icon(Icons.person, size: 60, color: Colors.white),
-                    radius: 65.0,
-                    backgroundColor: AppColors.textcolor1,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.primarydarkcolor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            // Аватар с красивым оформлением
+            _buildAvatar(),
+            const SizedBox(height: 12),
+
+            // Имя пользователя
+            const Text(
+              'A.Nurtilek',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textcolor2,
               ),
             ),
-            SizedBox(height: 8),
-            Center(
-              child: const Text(
-                'A.Nurtilek',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textcolor2,
-                  fontWeight: FontWeight.w600,
-                ),
+            const SizedBox(height: 4),
+
+            // Email
+            Text(
+              'a_nurtilek@gmail.com',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textcolor1.withOpacity(0.7),
               ),
             ),
-            Center(
-              child: const Text(
-                'a_nurtilek@gmail.com',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textcolor1,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+
+            const Divider(
+              color: Colors.amber,
+              thickness: 1.5,
+              indent: 60,
+              endIndent: 60,
             ),
-            Center(
-              child: const SizedBox(
-                height: 15.0,
-                width: double.infinity,
-                child: Divider(color: Colors.amber),
-              ),
-            ),
-            const SizedBox(height: 10.0),
+            SizedBox(height: 10),
+            // Меню
             MoreInf(
               name: 'Обо мне',
               icon: Icons.person_4_outlined,
@@ -100,12 +83,12 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {},
             ),
             MoreInf(
-              name: 'Мой адресс',
+              name: 'Мой адрес',
               icon: Icons.location_on_outlined,
               onPressed: () {},
             ),
             MoreInf(
-              name: 'Кредитые карты',
+              name: 'Кредитные карты',
               icon: Icons.credit_card_outlined,
               onPressed: () {},
             ),
@@ -119,8 +102,62 @@ class ProfilePage extends StatelessWidget {
               icon: Icons.notifications_outlined,
               onPressed: () {},
             ),
+
+            const SizedBox(height: 20),
+
+            // Кнопка выхода
+            LogOut(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar() {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primarydarkcolor.withValues(alpha: 0.3),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: const CircleAvatar(
+              child: Icon(Icons.person, size: 60, color: Colors.white),
+              radius: 65.0,
+              backgroundColor: AppColors.textcolor1,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.primarydarkcolor,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.backround1, width: 3),
+              ),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
