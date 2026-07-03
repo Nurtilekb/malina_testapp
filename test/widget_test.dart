@@ -1,30 +1,57 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../lib/main.dart';
+import 'package:provider/provider.dart';
+import 'package:malina/main.dart';
+import 'package:malina/services/cart_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App loads with products', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => CartService(),
+        child: const MyApp(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify app loads
+    expect(find.byType(MaterialApp), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Verify products are displayed
+    expect(find.text('Товар 1'), findsOneWidget);
+    expect(find.text('Товар 2'), findsOneWidget);
+  });
+
+  testWidgets('Add to cart functionality', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => CartService(),
+        child: const MyApp(),
+      ),
+    );
+
+    // Tap "Add to cart" button
+    final addToCartButton = find.byIcon(Icons.shopping_cart).first;
+    await tester.tap(addToCartButton);
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
+    // Verify snackbar appears
+    expect(find.text('Товар 1 добавлен в корзину'), findsOneWidget);
+  });
+
+  testWidgets('Add to favorites functionality', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => CartService(),
+        child: const MyApp(),
+      ),
+    );
+
+    // Tap favorite button
+    final favoriteButton = find.byIcon(Icons.favorite_border).first;
+    await tester.tap(favoriteButton);
+    await tester.pump();
+
+    // Verify badge appears on favorites tab
     expect(find.text('1'), findsOneWidget);
   });
 }
