@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:malina/pages/home_page/home_page.dart';
+import 'package:malina/main.dart';
 import 'package:malina/themes/themData.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +19,9 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState?.validate() ?? false) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(
+          builder: (context) => const MyHomePage(title: 'Malina'),
+        ),
       );
     }
   }
@@ -40,7 +42,10 @@ class _LoginPageState extends State<LoginPage> {
         elevation: 0,
         title: const Text(
           'Вход',
-          style: TextStyle(color: AppColors.textcolor2),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.textcolor2,
+          ),
         ),
         centerTitle: true,
       ),
@@ -61,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: AppColors.textcolor2,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 120),
                 const Text(
                   'Войдите в свой аккаунт',
                   style: TextStyle(fontSize: 16, color: AppColors.textcolor1),
