@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:malina/services/cart_service.dart';
 import 'package:malina/themes/themData.dart';
+import 'package:malina/services/cart_service.dart';
+import 'package:provider/provider.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
@@ -23,29 +23,9 @@ class FavoritesPage extends StatelessWidget {
           ),
           body: favorites.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.favorite_border,
-                        size: 80,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Нет избранных товаров',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Добавляйте товары через сердечко',
-                        style: TextStyle(color: Colors.grey[500], fontSize: 14),
-                      ),
-                    ],
+                  child: Text(
+                    'Нет избранных товаров',
+                    style: TextStyle(color: Colors.grey[400], fontSize: 16),
                   ),
                 )
               : ListView.builder(
@@ -60,31 +40,25 @@ class FavoritesPage extends StatelessWidget {
                       (item) => item.product.id == product.id,
                       orElse: () => CartItem(product: product, quantity: 0),
                     );
-                    final count = cartItem.quantity;
 
                     return Dismissible(
-                      key: ValueKey(product.id),
+                      key: Key(product.id),
                       direction: DismissDirection.horizontal,
                       onDismissed: (direction) {
                         if (direction == DismissDirection.startToEnd) {
                           cartService.addToCart(product.id);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${product.name} добавлено в корзину',
-                              ),
-                              duration: const Duration(seconds: 2),
-                              backgroundColor: AppColors.primarydarkcolor,
+                            const SnackBar(
+                              content: Text('Добавлено в корзину'),
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         } else {
                           cartService.toggleFavorite(product.id);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${product.name} удалено из избранного',
-                              ),
-                              duration: const Duration(seconds: 2),
+                            const SnackBar(
+                              content: Text('Удалено из избранного'),
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         }
@@ -122,11 +96,11 @@ class FavoritesPage extends StatelessWidget {
                         height: 100,
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
-                          color: AppColors.backround2,
+                          color: Colors.grey[500],
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withOpacity(0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -135,17 +109,13 @@ class FavoritesPage extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                            CircleAvatar(
+                              radius: 32,
+                              backgroundColor: Colors.grey[300],
                               child: const Icon(
-                                Icons.shopping_bag,
-                                size: 36,
-                                color: Colors.white70,
+                                Icons.image,
+                                size: 32,
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -157,66 +127,75 @@ class FavoritesPage extends StatelessWidget {
                                   Text(
                                     product.name,
                                     style: const TextStyle(
+                                      color: AppColors.backround1,
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textcolor2,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
                                   Text(
                                     '${product.price} ₽',
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      color: AppColors.backround1,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.primarydarkcolor,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove, size: 18),
-                                  color: Colors.green,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 28,
-                                    minHeight: 28,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.remove, size: 18),
+                                    color: Colors.green,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 28,
+                                      minHeight: 28,
+                                    ),
+                                    onPressed: () {
+                                      if (cartItem.quantity > 0) {
+                                        cartService.updateQuantity(
+                                          product.id,
+                                          cartItem.quantity - 1,
+                                        );
+                                      }
+                                    },
                                   ),
-                                  onPressed: () {
-                                    if (count > 0) {
-                                      cartService.updateQuantity(
-                                        product.id,
-                                        count - 1,
-                                      );
-                                    }
-                                  },
-                                ),
-                                Text(
-                                  '$count',
-                                  style: const TextStyle(
-                                    color: AppColors.textcolor2,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    '${cartItem.quantity}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.add, size: 18),
-                                  color: Colors.green,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 28,
-                                    minHeight: 28,
+                                  IconButton(
+                                    icon: const Icon(Icons.add, size: 18),
+                                    color: Colors.green,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 28,
+                                      minHeight: 28,
+                                    ),
+                                    onPressed: () {
+                                      cartService.addToCart(product.id);
+                                    },
                                   ),
-                                  onPressed: () {
-                                    cartService.addToCart(product.id);
-                                  },
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
