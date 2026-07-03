@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:malina/pages/home_page/favs_page.dart';
 import 'package:provider/provider.dart';
 
-import 'package:malina/pages/home_page/favs_page.dart' show FavoritesPage;
 import 'package:malina/pages/home_page/home_page.dart';
 import 'package:malina/pages/home_page/profile_page.dart';
-import 'package:malina/pages/home_page/shopcart_page.dart';
+import 'package:malina/pages/home_page/basket_page.dart';
 import 'package:malina/services/cart_service.dart';
 import 'package:malina/themes/themData.dart';
 
