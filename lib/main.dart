@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:malina/pages/auth_page/login_page.dart';
+import 'package:malina/pages/home_page/favs_page.dart' show FavoritesPage;
+import 'package:malina/pages/home_page/home_page.dart';
+import 'package:malina/pages/home_page/profile_page.dart';
+import 'package:malina/pages/home_page/shopcart_page.dart';
+import 'package:malina/themes/themData.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,14 +16,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Malina',
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.black,
+        primaryColor: AppColors.primarycolor,
+        scaffoldBackgroundColor: AppColors.backround1,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
           elevation: 0,
         ),
         textTheme: const TextTheme(
@@ -45,36 +51,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  int _currentIndex = 0;
+  void changeview(int index) {
     setState(() {
-      _counter++;
+      _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), centerTitle: true),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(Icons.circle, size: 80, color: Colors.pinkAccent),
-            const SizedBox(height: 16),
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          const HomePage(),
+          const ProfilePage(),
+          FavoritesPage(),
+          const ShoppingPage(),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        currentIndex: _currentIndex,
+
+        onTap: (index) {
+          changeview(index);
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Basket',
+          ),
+        ],
       ),
     );
   }
