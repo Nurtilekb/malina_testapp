@@ -11,9 +11,10 @@ class HomePage extends StatelessWidget {
     return Consumer<CartService>(
       builder: (context, cartService, child) {
         return Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 26.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 26.0),
           child: Column(
             children: [
+              SizedBox(height: 15),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Search products...",
@@ -44,7 +45,7 @@ class HomePage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            color: Colors.grey[800],
+                            color: Colors.grey[700],
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -67,14 +68,6 @@ class HomePage extends StatelessWidget {
                                           fontSize: 14,
                                         ),
                                       ),
-                                      Text(
-                                        '${product.price} ₽',
-                                        style: const TextStyle(
-                                          color: AppColors.primarydarkcolor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -95,6 +88,7 @@ class HomePage extends StatelessWidget {
                                     );
                                   },
                                   child: Container(
+                                    height: 40,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.vertical(
@@ -134,11 +128,15 @@ class HomePage extends StatelessWidget {
                           top: 10,
                           right: 10,
                           child: Container(
+                            width: 40,
+                            height: 40,
+
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.9),
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
+                              iconSize: 20,
                               icon: Icon(
                                 isFavorite
                                     ? Icons.favorite
@@ -148,6 +146,18 @@ class HomePage extends StatelessWidget {
                               onPressed: () {
                                 cartService.toggleFavorite(product.id);
                               },
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 40,
+                          right: 10,
+                          child: Text(
+                            '${product.price} ₽',
+                            style: const TextStyle(
+                              color: AppColors.primarydarkcolor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
