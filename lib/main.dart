@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:malina/pages/auth_page/login_page.dart';
 import 'package:malina/pages/home_page/favs_page.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.pinkAccent,
         ),
       ),
-      home: const MyHomePage(title: 'Malina'),
+      home: MyHomePage(title: 'Malina'),
     );
   }
 }
