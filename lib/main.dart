@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:malina/pages/auth_page/login_page.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import 'package:malina/pages/home_page/favs_page.dart' show FavoritesPage;
 import 'package:malina/pages/home_page/home_page.dart';
 import 'package:malina/pages/home_page/profile_page.dart';
 import 'package:malina/pages/home_page/shopcart_page.dart';
+import 'package:malina/services/cart_service.dart';
 import 'package:malina/themes/themData.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
+  );
+  runApp(
+    ChangeNotifierProvider(create: (_) => CartService(), child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -66,31 +75,47 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const HomePage(),
           const ProfilePage(),
-          FavoritesPage(),
+          const FavoritesPage(),
           const ShoppingPage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.black,
-        currentIndex: _currentIndex,
-
-        onTap: (index) {
-          changeview(index);
+      bottomNavigationBar: Consumer<CartService>(
+        builder: (context, cartService, child) {
+          return BottomNavigationBar(
+            unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.black,
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              changeview(index);
+            },
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+              BottomNavigationBarItem(
+                icon: Badge(
+                  isLabelVisible: cartService.favorites.isNotEmpty,
+                  label: Text('${cartService.favorites.length}'),
+                  child: const Icon(Icons.favorite),
+                ),
+                label: 'Favorites',
+              ),
+              BottomNavigationBarItem(
+                icon: Badge(
+                  isLabelVisible: cartService.cart.isNotEmpty,
+                  label: Text('${cartService.cartItemCount}'),
+                  child: const Icon(Icons.shopping_cart),
+                ),
+                label: 'Basket',
+              ),
+            ],
+          );
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Basket',
-          ),
-        ],
       ),
     );
   }
