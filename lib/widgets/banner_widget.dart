@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:malina/themes/themData.dart';
+import 'package:malina/core/theme.dart';
 
 class BannerWidget extends StatefulWidget {
   final List<BannerData> banners;
