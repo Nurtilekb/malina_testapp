@@ -249,32 +249,29 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: AppShadows.soft,
-          ),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            obscureText: obscureText,
-            style: const TextStyle(fontSize: 16, color: AppColors.textcolor2),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(color: AppColors.iosGray3, fontSize: 16),
-              prefixIcon: Icon(icon, color: AppColors.iosGray, size: 22),
-              suffixIcon: suffix,
-              filled: true,
-              fillColor: Colors.transparent,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          style: const TextStyle(fontSize: 16, color: AppColors.textcolor2),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: AppColors.iosGray3, fontSize: 16),
+            prefixIcon: Icon(icon, color: AppColors.iosGray, size: 22),
+            suffixIcon: suffix,
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide.none,
             ),
-            validator: validator,
+            contentPadding: const EdgeInsets.symmetric(vertical: 16),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(color: Colors.red),
+            ),
           ),
+          validator: validator,
         ),
       ],
     );
