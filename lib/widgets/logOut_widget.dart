@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:malina/themes/themData.dart';
+import 'package:malina/core/theme.dart';
 
 class LogOut extends StatelessWidget {
   const LogOut({super.key});
