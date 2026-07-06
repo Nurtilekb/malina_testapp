@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:malina/themes/themData.dart';
 
 class LogOut extends StatelessWidget {
   const LogOut({super.key});
@@ -7,29 +8,29 @@ class LogOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 50,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.red.withValues(alpha: 0.2),
-            Colors.red.withValues(alpha: 0.1),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withValues(alpha: 0.3), width: 1),
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
       ),
       child: TextButton(
         onPressed: () {},
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+        ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout_outlined, color: Colors.red, size: 20),
-            SizedBox(width: 10),
+            Icon(Icons.logout_rounded, color: AppColors.iosRed, size: 20),
+            SizedBox(width: 8),
             Text(
               'Выйти из аккаунта',
               style: TextStyle(
-                color: Colors.red,
-                fontSize: 16,
+                color: AppColors.iosRed,
+                fontSize: 17,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -37,6 +38,5 @@ class LogOut extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

@@ -12,8 +12,8 @@ class BannerWidget extends StatefulWidget {
     super.key,
     required this.banners,
     this.height = 180,
-    this.autoScrollDuration = const Duration(seconds: 3),
-    this.animationDuration = const Duration(milliseconds: 400),
+    this.autoScrollDuration = const Duration(seconds: 4),
+    this.animationDuration = const Duration(milliseconds: 500),
   });
 
   @override
@@ -47,7 +47,7 @@ class _BannerWidgetState extends State<BannerWidget> {
       _pageController.animateToPage(
         nextPage,
         duration: widget.animationDuration,
-        curve: Curves.easeInOut,
+        curve: Curves.easeOutCubic,
       );
     });
   }
@@ -66,19 +66,13 @@ class _BannerWidgetState extends State<BannerWidget> {
 
     return Container(
       height: widget.height,
-      margin: EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Stack(
           children: [
             PageView.builder(
@@ -94,10 +88,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                       gradient:
                           banner.gradient ??
                           LinearGradient(
-                            colors: [
-                              AppColors.primarycolor,
-                              AppColors.primarycolor.withOpacity(0.7),
-                            ],
+                            colors: [AppColors.iosBlue, AppColors.iosIndigo],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -107,7 +98,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                         Expanded(
                           flex: 3,
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -115,37 +106,43 @@ class _BannerWidgetState extends State<BannerWidget> {
                                 Text(
                                   banner.title,
                                   style: const TextStyle(
-                                    color: Color.fromARGB(255, 116, 1, 1),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -0.3,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 6),
                                 if (banner.subtitle != null)
                                   Text(
                                     banner.subtitle!,
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.9),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.85,
+                                      ),
                                       fontSize: 14,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 if (banner.actionText != null) ...[
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 14),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
-                                      vertical: 8,
+                                      vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(
+                                        AppRadius.pill,
+                                      ),
                                     ),
                                     child: Text(
                                       banner.actionText!,
                                       style: const TextStyle(
-                                        color: Color.fromARGB(255, 116, 1, 1),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textcolor2,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ),
@@ -159,8 +156,8 @@ class _BannerWidgetState extends State<BannerWidget> {
                           child: Center(
                             child: Icon(
                               banner.icon,
-                              size: 80,
-                              color: Colors.white.withOpacity(0.3),
+                              size: 72,
+                              color: Colors.white.withValues(alpha: 0.25),
                             ),
                           ),
                         ),
@@ -179,15 +176,17 @@ class _BannerWidgetState extends State<BannerWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   widget.banners.length,
-                  (index) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentPage == index ? 24 : 8,
-                    height: 8,
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: _currentPage == index ? 24 : 6,
+                    height: 6,
                     decoration: BoxDecoration(
                       color: _currentPage == index
                           ? Colors.white
-                          : Colors.white.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(4),
+                          : Colors.white.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
                     ),
                   ),
                 ),
@@ -212,7 +211,7 @@ class BannerData {
     required this.title,
     this.subtitle,
     this.actionText,
-    this.icon = Icons.card_giftcard,
+    this.icon = Icons.card_giftcard_rounded,
     this.gradient,
     this.onTap,
   });
