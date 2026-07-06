@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:malina/themes/themData.dart' show AppColors;
+import 'package:malina/themes/themData.dart'
+    show AppColors, AppRadius, AppShadows;
 import 'package:malina/widgets/logOut_widget.dart';
 import 'package:malina/widgets/prof_carts.dart';
 
@@ -9,153 +10,216 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 30,
-        title: const Text(
-          'Профиль',
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: AppColors.backround1,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.backround1,
-              AppColors.backround1.withOpacity(0.95),
-            ],
-          ),
-        ),
+      backgroundColor: AppColors.backround2,
+      body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(bottom: 100),
           children: [
-            // Аватар с красивым оформлением
-            _buildAvatar(),
-            const SizedBox(height: 12),
-
-            // Имя пользователя
-            const Text(
-              'A.Nurtilek',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textcolor2,
-              ),
-            ),
-            const SizedBox(height: 4),
-
-            // Email
-            Text(
-              'a_nurtilek@gmail.com',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textcolor1.withOpacity(0.7),
+            // Заголовок
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 8),
+              child: Text(
+                'Профиль',
+                style: TextStyle(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textcolor2,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
 
-            const Divider(
-              color: Colors.amber,
-              thickness: 1.5,
-              indent: 60,
-              endIndent: 60,
-            ),
-            SizedBox(height: 10),
-            // Меню
-            MoreInf(
-              name: 'Обо мне',
-              icon: Icons.person_4_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Мои заказы',
-              icon: Icons.shopping_bag_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Мои любимые',
-              icon: Icons.favorite_border_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Мой адрес',
-              icon: Icons.location_on_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Кредитные карты',
-              icon: Icons.credit_card_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Транзакции',
-              icon: Icons.transfer_within_a_station_outlined,
-              onPressed: () {},
-            ),
-            MoreInf(
-              name: 'Уведомления',
-              icon: Icons.notifications_outlined,
-              onPressed: () {},
+            // Карточка профиля
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: _buildProfileCard(),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            // Кнопка выхода
-            LogOut(),
+            // Секция: Аккаунт
+            _buildSectionHeader('Аккаунт'),
+            _buildSection([
+              MoreInf(
+                name: 'Обо мне',
+                icon: Icons.person_4_rounded,
+                onPressed: () {},
+              ),
+              MoreInf(
+                name: 'Мои заказы',
+                icon: Icons.shopping_bag_rounded,
+                onPressed: () {},
+              ),
+              MoreInf(
+                name: 'Мои любимые',
+                icon: Icons.favorite_rounded,
+                onPressed: () {},
+              ),
+            ]),
+
+            const SizedBox(height: 24),
+
+            // Секция: Настройки
+            _buildSectionHeader('Настройки'),
+            _buildSection([
+              MoreInf(
+                name: 'Мой адрес',
+                icon: Icons.location_on_rounded,
+                onPressed: () {},
+              ),
+              MoreInf(
+                name: 'Кредитные карты',
+                icon: Icons.credit_card_rounded,
+                onPressed: () {},
+              ),
+              MoreInf(
+                name: 'Транзакции',
+                icon: Icons.swap_horiz_rounded,
+                onPressed: () {},
+              ),
+              MoreInf(
+                name: 'Уведомления',
+                icon: Icons.notifications_rounded,
+                onPressed: () {},
+              ),
+            ]),
+
+            const SizedBox(height: 24),
+
+            // Выход
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: LogOut(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAvatar() {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 20, 8),
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.iosGray,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSection(List<Widget> items) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          boxShadow: AppShadows.card,
+        ),
+        child: Column(
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              items[i],
+              if (i < items.length - 1)
+                const Padding(
+                  padding: EdgeInsets.only(left: 52),
+                  child: Divider(
+                    height: 0.5,
+                    thickness: 0.5,
+                    color: AppColors.bordercolor,
+                  ),
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
+      ),
+      child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primarydarkcolor.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  spreadRadius: 5,
+          Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.iosBlue.withValues(alpha: 0.2),
+                      blurRadius: 16,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: const CircleAvatar(
+                  radius: 40,
+                  backgroundColor: AppColors.iosGray5,
+                  child: Icon(
+                    Icons.person_rounded,
+                    size: 44,
+                    color: AppColors.iosGray2,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: AppColors.iosBlue,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2.5),
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'A.Nurtilek',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textcolor2,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'a_nurtilek@gmail.com',
+                  style: TextStyle(fontSize: 14, color: AppColors.iosGray),
                 ),
               ],
             ),
-            child: const CircleAvatar(
-              child: Icon(Icons.person, size: 60, color: Colors.white),
-              radius: 65.0,
-              backgroundColor: AppColors.textcolor1,
-            ),
           ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.primarydarkcolor,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.backround1, width: 3),
-              ),
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: AppColors.iosGray3,
+            size: 24,
           ),
         ],
       ),
