@@ -13,247 +13,293 @@ class ShoppingPage extends StatelessWidget {
         final cart = cartService.cart;
 
         return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Корзина',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            backgroundColor: AppColors.backround1,
-            actions: cart.isNotEmpty
-                ? [
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Очистить корзину?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Отмена'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  cartService.clearCart();
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Очистить'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ]
-                : null,
-          ),
-          body: cart.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          backgroundColor: AppColors.backround2,
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                // Заголовок
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                  child: Row(
                     children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 80,
-                        color: AppColors.textcolor1,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Корзина пуста',
+                      const Text(
+                        'Корзина',
                         style: TextStyle(
-                          color: AppColors.textcolor1,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.textcolor2,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Добавьте товары из каталога',
-                        style: TextStyle(color: Colors.grey[500], fontSize: 14),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(12),
-                        itemCount: cart.length,
-                        itemBuilder: (context, index) {
-                          final item = cart[index];
-                          return Dismissible(
-                            key: Key(item.product.id),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) {
-                              cartService.removeFromCart(item.product.id);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    '${item.product.name} удалён из корзины',
-                                  ),
-                                  duration: const Duration(seconds: 2),
+                      const Spacer(),
+                      if (cart.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Очистить корзину?'),
+                                content: const Text(
+                                  'Все товары будут удалены из корзины.',
                                 ),
-                              );
-                            },
-                            background: Container(
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withValues(alpha: 0.8),
-                                borderRadius: BorderRadius.circular(12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.lg,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text(
+                                      'Отмена',
+                                      style: TextStyle(
+                                        color: AppColors.iosBlue,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      cartService.clearCart();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      'Очистить',
+                                      style: TextStyle(color: AppColors.iosRed),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.iosRed.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.pill,
                               ),
                             ),
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: AppColors.textcolor1,
-                                borderRadius: BorderRadius.circular(12),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: AppColors.iosRed,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  'Очистить',
+                                  style: TextStyle(
+                                    color: AppColors.iosRed,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+                // Контент
+                Expanded(
+                  child: cart.isEmpty
+                      ? _buildEmptyState()
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(20, 8, 20, 200),
+                          itemCount: cart.length,
+                          itemBuilder: (context, index) {
+                            final item = cart[index];
+                            return Dismissible(
+                              key: Key(item.product.id),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                cartService.removeFromCart(item.product.id);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${item.product.name} удалён из корзины',
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                    backgroundColor: AppColors.textcolor2,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppRadius.sm,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 24),
+                                margin: const EdgeInsets.only(bottom: 12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.iosRed,
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.lg,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.delete_rounded,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(
-                                      Icons.shopping_bag,
-                                      size: 40,
-                                      color: Colors.white70,
-                                    ),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.cardBackground,
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.lg,
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.product.name,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textcolor2,
-                                          ),
+                                  boxShadow: AppShadows.card,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 72,
+                                      height: 72,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            AppColors.iosGray6,
+                                            AppColors.iosGray5,
+                                          ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          '${item.product.price} ₽',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: AppColors.backround1,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        borderRadius: BorderRadius.circular(
+                                          AppRadius.md,
                                         ),
-                                      ],
+                                      ),
+                                      child: const Icon(
+                                        Icons.shopping_bag_rounded,
+                                        size: 32,
+                                        color: AppColors.iosGray3,
+                                      ),
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[800],
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
+                                          Text(
+                                            item.product.name,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textcolor2,
                                             ),
-                                            child: Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.remove,
-                                                    size: 18,
-                                                    color: AppColors
-                                                        .primarydarkcolor,
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                  constraints:
-                                                      const BoxConstraints(
-                                                        minWidth: 28,
-                                                        minHeight: 28,
-                                                      ),
-                                                  onPressed: () {
-                                                    cartService.updateQuantity(
-                                                      item.product.id,
-                                                      item.quantity - 1,
-                                                    );
-                                                  },
-                                                ),
-                                                Text(
-                                                  '${item.quantity}',
-                                                  style: const TextStyle(
-                                                    color: AppColors.backround1,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.add,
-                                                    size: 18,
-                                                    color: AppColors
-                                                        .primarydarkcolor,
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                  constraints:
-                                                      const BoxConstraints(
-                                                        minWidth: 28,
-                                                        minHeight: 28,
-                                                      ),
-                                                  onPressed: () {
-                                                    cartService.updateQuantity(
-                                                      item.product.id,
-                                                      item.quantity + 1,
-                                                    );
-                                                  },
-                                                ),
-                                              ],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${item.product.price.toStringAsFixed(0)} ₽',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              color: AppColors.iosBlue,
+                                              fontWeight: FontWeight.w700,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${item.product.price * item.quantity} ₽',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.backround1,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.iosGray6,
+                                            borderRadius: BorderRadius.circular(
+                                              AppRadius.pill,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              _QtyButton(
+                                                icon: Icons.remove_rounded,
+                                                onTap: () {
+                                                  cartService.updateQuantity(
+                                                    item.product.id,
+                                                    item.quantity - 1,
+                                                  );
+                                                },
+                                              ),
+                                              SizedBox(
+                                                width: 32,
+                                                child: Text(
+                                                  '${item.quantity}',
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    color: AppColors.textcolor2,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                              _QtyButton(
+                                                icon: Icons.add_rounded,
+                                                onTap: () {
+                                                  cartService.updateQuantity(
+                                                    item.product.id,
+                                                    item.quantity + 1,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          '${(item.product.price * item.quantity).toStringAsFixed(0)} ₽',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.textcolor2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
+          ),
+          // Нижняя панель с итогом
+          bottomNavigationBar: cart.isEmpty
+              ? null
+              : ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(AppRadius.xl),
+                  ),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.cardBackground,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x15000000),
+                          blurRadius: 20,
+                          offset: Offset(0, -4),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.backround2,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, -2),
-                          ),
-                        ],
-                      ),
-                      child: SafeArea(
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -261,7 +307,7 @@ class ShoppingPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Итого:',
+                                  'Итого',
                                   style: TextStyle(
                                     color: AppColors.textcolor2,
                                     fontSize: 18,
@@ -271,163 +317,114 @@ class ShoppingPage extends StatelessWidget {
                                 Text(
                                   '${cartService.totalPrice.toStringAsFixed(0)} ₽',
                                   style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primarydarkcolor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.textcolor2,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 16),
                             SizedBox(
                               width: double.infinity,
+                              height: 52,
                               child: ElevatedButton(
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Заказ оформлен!'),
-                                      backgroundColor:
-                                          AppColors.primarydarkcolor,
+                                    SnackBar(
+                                      content: const Text('Заказ оформлен!'),
+                                      backgroundColor: AppColors.iosGreen,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          AppRadius.sm,
+                                        ),
+                                      ),
                                     ),
                                   );
                                   cartService.clearCart();
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primarydarkcolor,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
+                                  backgroundColor: AppColors.iosBlue,
+                                  elevation: 0,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.md,
+                                    ),
                                   ),
                                 ),
                                 child: const Text(
                                   'Оформить заказ',
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
-                            // Totalcheck(subtotal: cartService.totalPrice),
                           ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
         );
       },
     );
   }
-}
 
-class Totalcheck extends StatelessWidget {
-  final double subtotal;
-  final VoidCallback? onCheckout;
-
-  const Totalcheck({super.key, required this.subtotal, this.onCheckout});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Colors.grey[50]!, Colors.grey[100]!],
-        ),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
+  Widget _buildEmptyState() {
+    return Center(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Индикатор
           Container(
-            width: 50,
-            height: 5,
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(3),
+              color: AppColors.iosGray6,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.tag_rounded,
+              size: 40,
+              color: AppColors.iosGray2,
             ),
           ),
           const SizedBox(height: 20),
-
-          // Итоговая сумма
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Итого',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '${subtotal.toStringAsFixed(2)} ₽',
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    'включая НДС',
-                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Кнопка
-          SizedBox(
-            width: double.infinity,
-            height: 55,
-            child: ElevatedButton(
-              onPressed: onCheckout,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.shopping_bag_outlined),
-                  SizedBox(width: 12),
-                  Text(
-                    'Перейти к оформлению',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+          const Text(
+            'Корзина пуста',
+            style: TextStyle(
+              color: AppColors.textcolor2,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
+          const SizedBox(height: 6),
+          Text(
+            'Добавьте товары из каталога',
+            style: TextStyle(color: AppColors.iosGray, fontSize: 14),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _QtyButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _QtyButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon, size: 18, color: AppColors.iosBlue),
       ),
     );
   }
