@@ -1,15 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:malina/pages/auth_page/login_page.dart';
-import 'package:malina/pages/home_page/favs_page.dart';
+import 'package:malina/pages/home/favs_page.dart';
 import 'package:provider/provider.dart';
 
-import 'package:malina/pages/home_page/home_page.dart';
-import 'package:malina/pages/home_page/profile_page.dart';
-import 'package:malina/pages/home_page/basket_page.dart';
+import 'package:malina/pages/home/home_page.dart';
+import 'package:malina/pages/home/profile_page.dart';
+import 'package:malina/pages/home/basket_page.dart';
 import 'package:malina/services/cart_service.dart';
-import 'package:malina/themes/themData.dart';
+import 'package:malina/core/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,7 +100,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const LoginPage(),
+      home: const MyHomePage(title: 'Malina'),
     );
   }
 }
@@ -151,7 +150,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-/// iOS-стиль нижнего таб-бара с frosted-glass эффектом
 class _IosTabBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -165,128 +163,71 @@ class _IosTabBar extends StatelessWidget {
     required this.favCount,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      _TabItem(icon: Icons.house_rounded, label: 'Главная', badge: 0),
-      _TabItem(icon: Icons.person_rounded, label: 'Профиль', badge: 0),
-      _TabItem(
-        icon: Icons.favorite_rounded,
-        label: 'Избранное',
-        badge: favCount,
-      ),
-      _TabItem(
-        icon: Icons.shopping_bag_rounded,
-        label: 'Корзина',
-        badge: cartCount,
-      ),
-    ];
+  Widget _buildIcon(IconData icon, int count) {
+    if (count <= 0) {
+      return Icon(icon);
+    }
 
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            border: Border(
-              top: BorderSide(color: AppColors.bordercolor, width: 0.5),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Icon(icon),
+        Positioned(
+          right: -6,
+          top: -6,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
             ),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: List.generate(items.length, (index) {
-                  final item = items[index];
-                  final isSelected = index == currentIndex;
-                  final color = isSelected
-                      ? AppColors.iosBlue
-                      : AppColors.iosGray;
-
-                  return Expanded(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onTap(index),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2),
-                                child: Icon(item.icon, color: color, size: 26),
-                              ),
-                              if (item.badge > 0)
-                                Positioned(
-                                  top: -4,
-                                  right: 10,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 1,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.iosRed,
-                                      borderRadius: BorderRadius.circular(
-                                        AppRadius.pill,
-                                      ),
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 18,
-                                      minHeight: 18,
-                                    ),
-                                    child: Text(
-                                      '${item.badge}',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item.label,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: isSelected
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: color,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+            child: Text(
+              count.toString(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
-      ),
+      ],
     );
   }
-}
 
-class _TabItem {
-  final IconData icon;
-  final String label;
-  final int badge;
-
-  const _TabItem({
-    required this.icon,
-    required this.label,
-    required this.badge,
-  });
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      backgroundColor: AppColors.backround2,
+      selectedItemColor: AppColors.iosBlue,
+      unselectedItemColor: AppColors.textcolor2,
+      type: BottomNavigationBarType.fixed,
+      items: [
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: _buildIcon(Icons.favorite_border, favCount),
+          activeIcon: _buildIcon(Icons.favorite, favCount),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: _buildIcon(Icons.shopping_bag_outlined, cartCount),
+          activeIcon: _buildIcon(Icons.shopping_bag, cartCount),
+          label: 'Basket',
+        ),
+      ],
+    );
+  }
 }
