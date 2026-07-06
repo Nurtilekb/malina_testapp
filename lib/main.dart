@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:malina/pages/auth/login_page.dart';
 import 'package:malina/pages/home/favs_page.dart';
 import 'package:provider/provider.dart';
 

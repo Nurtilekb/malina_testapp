@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:malina/pages/profile/about_me_screen.dart';
 import 'package:malina/core/theme.dart' show AppColors, AppRadius, AppShadows;
+import 'package:malina/pages/profile/my_orders.dart';
 import 'package:malina/widgets/logout_widget.dart';
 import 'package:malina/widgets/profile_item.dart';
 
@@ -56,7 +57,12 @@ class ProfilePage extends StatelessWidget {
               MoreInf(
                 name: 'Мои заказы',
                 icon: Icons.shopping_bag_rounded,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyOrders()),
+                  );
+                },
               ),
               MoreInf(
                 name: 'Мои любимые',
@@ -180,18 +186,21 @@ class ProfilePage extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 right: 0,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: AppColors.iosBlue,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2.5),
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt_rounded,
-                    color: Colors.white,
-                    size: 14,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: AppColors.iosBlue,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2.5),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.white,
+                      size: 14,
+                    ),
                   ),
                 ),
               ),

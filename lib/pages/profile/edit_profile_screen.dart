@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class EditProfileScreen extends StatefulWidget {
   EditProfileScreen({required this.onImageChanged});
   String? data;
@@ -99,19 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(90.0),
 
-                      child: imageFile == null
-                          ? Image.asset(
-                              _image ?? "none",
-                              fit: BoxFit.fill,
-                              height: 170,
-                              width: 170,
-                            )
-                          : Image.file(
-                              imageFile!,
-                              fit: BoxFit.fill,
-                              height: 170,
-                              width: 170,
-                            ),
+                      child: Text('PHOTO'),
                     ),
                   ),
                   //     CircleAvatar(radius: 120,child:imageFile == null
