@@ -30,13 +30,6 @@ class _MyOrdersState extends State<MyOrders> {
         child: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 20, 0),
-              child: Row(children: [
-                
-                ],
-              ),
-            ),
-            Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Column(
                 children: [
