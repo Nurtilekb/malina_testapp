@@ -14,41 +14,23 @@ class FavoritesPage extends StatelessWidget {
         final favorites = cartService.favorites;
 
         return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Избранное',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textcolor2,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ),
           backgroundColor: AppColors.backround2,
           body: SafeArea(
-            bottom: false,
             child: Column(
               children: [
                 // Заголовок
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 12, 20, 8),
-                  child: Row(
-                    children: [
-                      if (ModalRoute.of(context)?.canPop ?? false)
-                        GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: const Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Icon(
-                              Icons.chevron_left_rounded,
-                              color: AppColors.iosBlue,
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                      SizedBox(width: 10),
-                      const Text(
-                        'Избранное',
-                        style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.textcolor2,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 // Контент
                 Expanded(
                   child: favorites.isEmpty

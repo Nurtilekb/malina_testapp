@@ -15,7 +15,6 @@ class HomePage extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.backround2,
           body: SafeArea(
-            bottom: false,
             child: CustomScrollView(
               slivers: [
                 // Большой заголовок в стиле iOS

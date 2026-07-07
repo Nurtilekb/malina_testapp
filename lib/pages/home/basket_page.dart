@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:malina/services/cart_service.dart';
+import 'package:malina/services/order_service.dart';
 import 'package:malina/core/theme.dart';
 
 class ShoppingPage extends StatelessWidget {
@@ -14,8 +15,8 @@ class ShoppingPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.backround2,
+
           body: SafeArea(
-            bottom: false,
             child: Column(
               children: [
                 // Заголовок
@@ -297,7 +298,6 @@ class ShoppingPage extends StatelessWidget {
                       ],
                     ),
                     child: SafeArea(
-                      top: false,
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
@@ -330,6 +330,26 @@ class ShoppingPage extends StatelessWidget {
                               height: 52,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  final orderService = context
+                                      .read<OrderService>();
+
+                                  // Создаём заказ из товаров в корзине
+                                  final orderItems = cart
+                                      .map(
+                                        (item) => OrderItem(
+                                          productId: item.product.id,
+                                          name: item.product.name,
+                                          price: item.product.price,
+                                          quantity: item.quantity,
+                                        ),
+                                      )
+                                      .toList();
+
+                                  orderService.createOrder(
+                                    orderItems,
+                                    cartService.totalPrice,
+                                  );
+
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: const Text('Заказ оформлен!'),
