@@ -1,14 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:malina/pages/auth/login_page.dart';
 import 'package:malina/pages/home/favs_page.dart';
+import 'package:malina/services/cedite_card_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:malina/pages/home/home_page.dart';
 import 'package:malina/pages/home/profile_page.dart';
 import 'package:malina/pages/home/basket_page.dart';
 import 'package:malina/services/cart_service.dart';
+import 'package:malina/services/order_service.dart';
 import 'package:malina/core/theme.dart';
 
 void main() {
@@ -22,7 +23,14 @@ void main() {
     ),
   );
   runApp(
-    ChangeNotifierProvider(create: (_) => CartService(), child: const MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartService()),
+        ChangeNotifierProvider(create: (_) => CardService()),
+        ChangeNotifierProvider(create: (_) => OrderService()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
