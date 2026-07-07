@@ -11,8 +11,8 @@ class NiotificationPage extends StatefulWidget {
 
 class _NiotificationPageState extends State<NiotificationPage> {
   bool _allNotif = true;
-  bool _orderNotif = true;
-  bool _emailNotif = true;
+  bool _orderNotif = false;
+  bool _emailNotif = false;
   bool _generalNotif = true;
 
   @override
@@ -88,6 +88,7 @@ class _NiotificationPageState extends State<NiotificationPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
