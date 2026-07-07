@@ -20,19 +20,33 @@ class FavoritesPage extends StatelessWidget {
             child: Column(
               children: [
                 // Заголовок
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 12, 20, 8),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Избранное',
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textcolor2,
-                        letterSpacing: -0.5,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 12, 20, 8),
+                  child: Row(
+                    children: [
+                      if (ModalRoute.of(context)?.canPop ?? false)
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.chevron_left_rounded,
+                              color: AppColors.iosBlue,
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                      SizedBox(width: 10),
+                      const Text(
+                        'Избранное',
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.textcolor2,
+                          letterSpacing: -0.5,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 // Контент
