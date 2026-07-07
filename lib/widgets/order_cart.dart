@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:malina/core/theme.dart';
+import 'package:malina/services/order_service.dart';
 
 class OrderCart extends StatefulWidget {
-  const OrderCart({super.key});
+  final Order order;
+
+  const OrderCart({super.key, required this.order});
 
   @override
-  State<OrderCart> createState() => _OrderCArtState();
+  State<OrderCart> createState() => _OrderCartState();
 }
 
-class _OrderCArtState extends State<OrderCart> {
+class _OrderCartState extends State<OrderCart> {
   final ExpansibleController ctrl = ExpansibleController();
   bool _isExpanded = false;
 
@@ -20,6 +23,9 @@ class _OrderCArtState extends State<OrderCart> {
 
   @override
   Widget build(BuildContext context) {
+    final order = widget.order;
+    final status = order.status;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: ColoredBox(
@@ -74,17 +80,17 @@ class _OrderCArtState extends State<OrderCart> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Order #90345',
-                            style: TextStyle(
-                              fontSize: 18,
+                          Text(
+                            'Заказ ${order.id}',
+                            style: const TextStyle(
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textcolor2,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Placed on Octobar 19 2021',
+                            'От ${order.formattedDate}',
                             style: TextStyle(
                               fontSize: 14,
                               color: AppColors.iosGray,
@@ -92,10 +98,13 @@ class _OrderCArtState extends State<OrderCart> {
                           ),
                           Row(
                             children: [
-                              Text('items: 10', style: TextStyle(fontSize: 12)),
-                              SizedBox(width: 10),
                               Text(
-                                'items: 16.89 dol',
+                                'Товаров: ${order.itemCount}',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Сумма: ${order.total.toStringAsFixed(0)} ₽',
                                 style: TextStyle(fontSize: 12),
                               ),
                             ],
@@ -106,11 +115,12 @@ class _OrderCArtState extends State<OrderCart> {
                   ],
                 ),
                 children: [
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
                       children: [
+                        // Точки статусов
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -131,54 +141,65 @@ class _OrderCArtState extends State<OrderCart> {
                             Container(
                               width: 2,
                               height: 35,
-                              color: AppColors.iosBlue,
+                              color: status.index >= OrderStatus.shipped.index
+                                  ? AppColors.iosBlue
+                                  : AppColors.iosGray2,
                             ),
                             CircleAvatar(
                               radius: 5,
-                              backgroundColor: AppColors.iosBlue,
+                              backgroundColor:
+                                  status.index >= OrderStatus.shipped.index
+                                  ? AppColors.iosBlue
+                                  : AppColors.iosGray2,
                             ),
                             Container(
                               width: 2,
                               height: 30,
-                              color: AppColors.iosGray2,
+                              color: status.index >= OrderStatus.delivered.index
+                                  ? AppColors.iosBlue
+                                  : AppColors.iosGray2,
                             ),
                             CircleAvatar(
                               radius: 5,
-                              backgroundColor: AppColors.iosGray2,
+                              backgroundColor:
+                                  status.index >= OrderStatus.delivered.index
+                                  ? AppColors.iosBlue
+                                  : AppColors.iosGray2,
                             ),
                           ],
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
+                        // Названия статусов
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                "Заказ размещен:",
+                              const Text(
+                                "Заказ размещён:",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(height: 20),
-                              Text(
-                                "Заказ подтвержден:",
+                              const SizedBox(height: 20),
+                              const Text(
+                                "Заказ подтверждён:",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(height: 20),
-                              Text(
+                              const SizedBox(height: 20),
+                              const Text(
                                 "Заказ отправлен:",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(height: 20),
-                              Text(
+                              const SizedBox(height: 20),
+                              const Text(
                                 "Заказ доставлен:",
                                 style: TextStyle(
                                   fontSize: 14,
@@ -188,37 +209,42 @@ class _OrderCArtState extends State<OrderCart> {
                             ],
                           ),
                         ),
+                        // Даты статусов
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Oct 19 2021",
-                              style: TextStyle(
+                              order.formattedDate,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Text(
-                              "Oct 20 2021",
-                              style: TextStyle(
+                              order.formattedDate,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Text(
-                              "Oct 20 2021",
-                              style: TextStyle(
+                              status.index >= OrderStatus.shipped.index
+                                  ? order.formattedDate
+                                  : "В ожидании.",
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Text(
-                              "В ожидании.",
-                              style: TextStyle(
+                              status.index >= OrderStatus.delivered.index
+                                  ? order.formattedDate
+                                  : "В ожидании.",
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
