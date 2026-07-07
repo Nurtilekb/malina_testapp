@@ -91,7 +91,7 @@ class AboutMEScreen extends StatelessWidget {
                 ),
                 _InfoRow(
                   title: 'Email',
-                  value: 'nurtilekabdulahatov@gmail.com',
+                  value: 'example@gmail.com',
                   icon: Icons.mail_rounded,
                   iconColor: AppColors.iosPurple,
                 ),

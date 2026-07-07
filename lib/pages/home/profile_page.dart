@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:malina/pages/profile/about_me_screen.dart';
-import 'package:malina/core/theme.dart' show AppColors, AppRadius, AppShadows;
+import 'package:malina/pages/profile/build_profile_card.dart';
 import 'package:malina/pages/profile/my_orders.dart';
+import 'package:malina/pages/home/favs_page.dart';
+import 'package:malina/pages/profile/cards_page.dart';
+import 'package:malina/core/theme.dart' show AppColors, AppRadius, AppShadows;
+import 'package:malina/pages/profile/notification_page.dart';
+import 'package:malina/pages/profile/transactions_page.dart';
 import 'package:malina/widgets/logout_widget.dart';
 import 'package:malina/widgets/profile_item.dart';
 
@@ -13,9 +18,8 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backround2,
       body: SafeArea(
-        bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Заголовок
             const Padding(
@@ -34,7 +38,7 @@ class ProfilePage extends StatelessWidget {
             // Карточка профиля
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: _buildProfileCard(),
+              child: BuildProfileCard(),
             ),
 
             const SizedBox(height: 24),
@@ -42,18 +46,6 @@ class ProfilePage extends StatelessWidget {
             // Секция: Аккаунт
             _buildSectionHeader('Аккаунт'),
             _buildSection([
-              MoreInf(
-                name: 'Обо мне',
-                icon: Icons.person_4_rounded,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AboutMEScreen(),
-                    ),
-                  );
-                },
-              ),
               MoreInf(
                 name: 'Мои заказы',
                 icon: Icons.shopping_bag_rounded,
@@ -67,7 +59,14 @@ class ProfilePage extends StatelessWidget {
               MoreInf(
                 name: 'Мои любимые',
                 icon: Icons.favorite_rounded,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FavoritesPage(),
+                    ),
+                  );
+                },
               ),
             ]),
 
@@ -79,27 +78,47 @@ class ProfilePage extends StatelessWidget {
               MoreInf(
                 name: 'Кредитные карты',
                 icon: Icons.credit_card_rounded,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CardsPage()),
+                  );
+                },
               ),
               MoreInf(
                 name: 'Транзакции',
                 icon: Icons.swap_horiz_rounded,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionsPage(),
+                    ),
+                  );
+                },
               ),
               MoreInf(
                 name: 'Уведомления',
                 icon: Icons.notifications_rounded,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NiotificationPage(),
+                    ),
+                  );
+                },
               ),
             ]),
 
             const SizedBox(height: 24),
-
+            Spacer(),
             // Выход
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: LogOut(),
             ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -146,93 +165,6 @@ class ProfilePage extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildProfileCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: AppShadows.card,
-      ),
-      child: Row(
-        children: [
-          Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.iosBlue.withValues(alpha: 0.2),
-                      blurRadius: 16,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: const CircleAvatar(
-                  radius: 40,
-                  backgroundColor: AppColors.iosGray5,
-                  child: Icon(
-                    Icons.person_rounded,
-                    size: 44,
-                    color: AppColors.iosGray2,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: AppColors.iosBlue,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2.5),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'A.Nurtilek',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textcolor2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'a_nurtilek@gmail.com',
-                  style: TextStyle(fontSize: 14, color: AppColors.iosGray),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.chevron_right_rounded,
-            color: AppColors.iosGray3,
-            size: 24,
-          ),
-        ],
       ),
     );
   }
